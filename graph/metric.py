@@ -5,7 +5,7 @@ import torch
 import numpy as np
 
 _is_hit_cache = {}
-
+#Hit Ratio(HR)在top-K推荐中，HR是一种常用的衡量召回率的指标
 def get_is_hit(scores, ground_truth, topk):
     global _is_hit_cache
     cacheid = (id(scores), id(ground_truth))
@@ -20,7 +20,7 @@ def get_is_hit(scores, ground_truth, topk):
                               col_indice.view(-1)].view(-1, topk)
         _is_hit_cache[topk] = {'id': cacheid, 'is_hit': is_hit}
         return is_hit
-        
+
 #推荐系统常用评价指标(recall,MAP,MRR,NDCG,F1,ROC等)
 class _Metric:
     '''
@@ -138,3 +138,4 @@ class MRR(_Metric):
         num_pos = ground_truth.sum(dim=1)
         self._cnt += scores.shape[0] - (num_pos == 0).sum().item()
         self._sum += first_hit_rr.sum().item()
+
