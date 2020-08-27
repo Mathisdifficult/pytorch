@@ -20,8 +20,8 @@ def get_is_hit(scores, ground_truth, topk):
                               col_indice.view(-1)].view(-1, topk)
         _is_hit_cache[topk] = {'id': cacheid, 'is_hit': is_hit}
         return is_hit
-
-
+        
+#推荐系统常用评价指标(recall,MAP,MRR,NDCG,F1,ROC等)
 class _Metric:
     '''
     base class of metrics like Recall@k NDCG@k MRR@k

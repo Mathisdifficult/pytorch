@@ -93,6 +93,7 @@ class ItemDataset(BasicDataset):
         values = np.ones(len(self.U_I_pairs), dtype=np.float32)
         self.ground_truth_u_i = sp.coo_matrix( 
             (values, (indice[:, 0], indice[:, 1])), shape=(self.num_users, self.num_items)).tocsr()
+    
     def __getitem__(self, index):
         user_i, pos_item = self.U_I_pairs[index]
         all_items = [pos_item]
@@ -105,15 +106,32 @@ class ItemDataset(BasicDataset):
 
         return torch.LongTensor([user_i]), torch.LongTensor(all_items)
 
+    def __len__(self):
+        return len(self.U_I_pairs)  
 
+class AssistDataset(BasicDataset):
+    def __init__(self, path, name):
+        super().__init__(path, name, None, None)
+        # Bundle-Item
+        self.B_I_pairs = self.load_B_I_interaction()
+        indice = np.array(self.B_I_pairs, dtype=np.int32)
+        values = np.ones(len(self.B_I_pairs), dtype=np.float32)
+        self.ground_truth_b_i = sp.coo_matrix(
+            (values, (indice[:, 0], indice[:, 1])), shape=(self.num_bundles, self.num_items)).tocsr()
 
+def get_dataset(path, name, task='tune', seed=123):
+    assist_data = AssistDataset(path, name)
+    print('finish loading assist data')
+    item_data = ItemDataset(path, name, assist_data, seed=seed)
+    print('finish loading item data')
 
+    bundle_train_data = BundleTrainDataset(path, name, item_data, assist_data, seed=seed)
+    print('finish loading bundle train data')
+    bundle_test_data = BundleTestDataset(path, name, bundle_train_data, task=task)
+    print('finish loading bundle test data')
 
+    return bundle_train_data, bundle_test_data, item_data, assist_data
 
-
-
-
-        
 
 
 
