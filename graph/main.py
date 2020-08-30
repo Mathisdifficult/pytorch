@@ -76,8 +76,6 @@ def main():
         info = BGCN_Info(64, decay, message_dropout, node_dropout, 1)
         model = BGCN(info, assist_data, graph, device, pretrain=None).to(device)
 
-        assert model.__class__.__name__ == CONFIG['model']
-
         # op
         op = optim.Adam(model.parameters(), lr=lr)
         # env
