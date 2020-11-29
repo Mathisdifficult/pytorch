@@ -83,9 +83,11 @@ class Preprocess(object):
                     url=rdf[u'@id']
                     rdf0 = url.replace('http://zhishi.me/baidubaike/resource/', '')
                     rdf0=unquote(str(rdf0))
+                    i = 0
                     for key in rdf.keys():
                         if key!='@id':
-                            rdf1=rdf.keys()[0]
+                            rdf1=rdf.keys()[i]
+                            i+=1
                             rdf1 = rdf1.replace('http://zhishi.me/baidubaike/property/', '')
                             rdf1=unquote(str(rdf1))
                             rdf2=rdf[key][0][u'@value']
@@ -95,7 +97,7 @@ class Preprocess(object):
 
                             except:
                                 new_rdf = '<' + rdf0 + '> <' + rdf1 + '> <' + rdf2 + '>\n'
-
+                            print new_rdf
                             baidubaike_isrdf.write(new_rdf)
             finally:
                 self.kb_infobox_properties_quantity = baidubaike_infobox_properties_counter
@@ -143,14 +145,14 @@ class Preprocess(object):
     def conbine_entity_synonym(self):
         # baidubaike
         if self.kb_name == 'baidubaike':
+            baidubaike_entity_file = open(self.entity_url_output_path, 'r')
+            baidubaike_synonym_file = open(self.synonym_path, 'r')
+            baidubaike_entity_synonym_file = open(self.entity_synonym_output_path, 'a')
+            baidubaike_synonym = []
+            baidubaike_synonym_quantity = 77509
+            synonym_counter = 0
+            count=0
             try:
-                baidubaike_entity_file = open(self.entity_url_output_path, 'r')
-                baidubaike_synonym_file = open(self.synonym_path, 'r')
-                baidubaike_entity_synonym_file = open(self.entity_synonym_output_path, 'a')
-                baidubaike_synonym = []
-                baidubaike_synonym_quantity = 77509
-                synonym_counter = 0
-
                 for line in baidubaike_synonym_file.readlines():
                     synonym_counter += 1
                     dict = {}
@@ -159,29 +161,22 @@ class Preprocess(object):
                     # split
                     split1 = line.split('> <')
                     entity = split1[0]
-                    split2 = split1[1].split('> [')
-                    syn = split2[1]
-
-                    # clean
-                    entity = entity[1:]
-                    syn = syn[:-2]
-
+                    syn = split1[1]
                     dict['entity'] = entity
                     dict['synonym'] = syn
 
                     baidubaike_synonym.append(dict)
 
                 for line in baidubaike_entity_file.readlines():
+                    count += 1
                     line = line.strip('\n')
 
                     # split
                     split = line.split('> <')
                     entity = split[0]
-                    url = split[1]
 
                     # clean
                     entity = entity[1:]
-                    url = url[:-1]
 
                     # combine
                     synonym = ''
@@ -190,19 +185,19 @@ class Preprocess(object):
                         if entity == d['entity']:
                             synonym = d['synonym']
                             break
-
                     entity_synonym = '<' + entity + '> <' + synonym + '>\n'
                     baidubaike_entity_synonym_file.write(entity_synonym)
+                    print count
 
             finally:
                 self.synonym_quantity = synonym_counter
 
-                if baidubaike_entity_file:
-                    baidubaike_entity_file.close()
+                # if baidubaike_entity_file:
+                #     baidubaike_entity_file.close()
 
-                if baidubaike_synonym_file:
-                    baidubaike_synonym_file.close()
+                # if baidubaike_synonym_file:
+                #     baidubaike_synonym_file.close()
 
-                if baidubaike_entity_synonym_file:
-                    baidubaike_entity_synonym_file.close()
+                # if baidubaike_entity_synonym_file:
+                #     baidubaike_entity_synonym_file.close()
 

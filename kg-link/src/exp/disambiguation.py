@@ -106,7 +106,10 @@ class EntityDisambiguationGraph(object):
                 seg_list = jieba.lcut(object)   # unicode
                 entity_context.extend(seg_list)
 
-            if e == object:
+            # print e
+            # print e
+            if str(e) == str(object):
+                print object
                 subject = subject.decode('utf8')
                 seg_list = jieba.lcut(subject)  # unicode
                 entity_context.extend(seg_list)
@@ -116,18 +119,16 @@ class EntityDisambiguationGraph(object):
         seg_list = []
 
         for line in abstracts.readlines():
-            line = line.strip('\n')
-
-            # split
+            line = line.strip('\n')         
             split = line.split('> <')
             entity = split[0]
-            abstract = split[1]
-
             # clean
             entity = entity[1:]
-            abstract = abstract[:-1]
 
-            if e == entity:
+            # split
+            if str(e) == str(entity):
+                abstract = split[1]
+                abstract = abstract[:-1]
                 seg_list = jieba.lcut(abstract)     # unicode
 
                 if entity in seg_list:
@@ -690,136 +691,47 @@ class Disambiguation(object):
     def disambiguation(self):
         # baidubaike
         if self.kb_name == "baidubaike":
-            try:
-                kb_name = self.kb_name
-                tables = self.tables
-                baidubaike_graph_path = self.graph_path
-                baidubaike_disambiguation_output_path = self.disambiguation_output_path
-                baidubaike_candidate_file = open(self.candidate_path, 'r')
-                baidubaike_candidate = baidubaike_candidate_file.read()
-                baidubaike_candidate_json = json.loads(baidubaike_candidate, encoding='utf8')    # kb_candidate[nTable][nRow][nCol] = dict{'mention': m, 'candidates': []}
-                baidubaike_infobox_property = open(self.infobox_property_path, 'r')
-                baidubaike_abstracts = open(self.abstracts_path, 'r')
+            kb_name = self.kb_name
+            tables = self.tables
+            baidubaike_graph_path = self.graph_path
+            baidubaike_disambiguation_output_path = self.disambiguation_output_path
+            baidubaike_candidate_file = open(self.candidate_path, 'r')
+            baidubaike_candidate = baidubaike_candidate_file.read()
+            baidubaike_candidate_json = json.loads(baidubaike_candidate, encoding='utf8')
+            baidubaike_infobox_property = open(self.infobox_property_path, 'r')
+            baidubaike_abstracts = open(self.abstracts_path, 'r')
 
-                # i: 第i张表格，从0开始
-                for i in range(self.table_quantity):
-                    table = tables[i]
-                    candidates = baidubaike_candidate_json[i]
+            # i: 第i张表格，从0开始
+            for i in range(self.table_quantity):
+                table = tables[i]
+                candidates = baidubaike_candidate_json[i]
 
-                    EDG_master = EntityDisambiguationGraph(kb_name, i, table, candidates, baidubaike_graph_path, baidubaike_infobox_property, baidubaike_abstracts, baidubaike_disambiguation_output_path)
+                EDG_master = EntityDisambiguationGraph(kb_name, i, table, candidates, baidubaike_graph_path, baidubaike_infobox_property, baidubaike_abstracts, baidubaike_disambiguation_output_path)
 
-                    time1 = time.time()
+                time1 = time.time()
 
-                    EDG_master.build_entity_disambiguation_graph()
-                    EDG_master.compute_el_impact_factors()
-                    EDG_master.iterative_probability_propagation()
-                    EDG_master.rank_candidates()
-                    EDG_master.pick_entity()
-                    EDG_master.save_entity_disambiguation_graph()
-                    EDG_master.draw_entity_disambiguation_graph()
+                EDG_master.build_entity_disambiguation_graph()
+                EDG_master.compute_el_impact_factors()
+                EDG_master.iterative_probability_propagation()
+                EDG_master.rank_candidates()
+                EDG_master.pick_entity()
+                EDG_master.save_entity_disambiguation_graph()
+                # EDG_master.draw_entity_disambiguation_graph()
 
-                    time2 = time.time()
-                    print 'Consumed Time: ' + str(time2 - time1) + ' s'
-                    print
+                time2 = time.time()
+                print 'Consumed Time: ' + str(time2 - time1) + ' s'
+                
 
-            finally:
-                if baidubaike_candidate_file:
-                    baidubaike_candidate_file.close()
+            # finally:
+            #     if baidubaike_candidate_file:
+            #         baidubaike_candidate_file.close()
 
-                if baidubaike_infobox_property:
-                    baidubaike_infobox_property.close()
+                # if baidubaike_infobox_property:
+                #     baidubaike_infobox_property.close()
 
-                if baidubaike_abstracts:
-                    baidubaike_abstracts.close()
-
-
-        # hudongbaike
-        if self.kb_name == "hudongbaike":
-            try:
-                kb_name = self.kb_name
-                tables = self.tables
-                hudongbaike_graph_path = self.graph_path
-                hudongbaike_disambiguation_output_path = self.disambiguation_output_path
-                hudongbaike_candidate_file = open(self.candidate_path, 'r')
-                hudongbaike_candidate = hudongbaike_candidate_file.read()
-                hudongbaike_candidate_json = json.loads(hudongbaike_candidate, encoding='utf8')    # kb_candidate[nTable][nRow][nCol] = dict{'mention': m, 'candidates': []}
-                hudongbaike_infobox_property = open(self.infobox_property_path, 'r')
-                hudongbaike_abstracts = open(self.abstracts_path, 'r')
-
-                # i: 第i张表格，从0开始
-                for i in range(self.table_quantity):
-                    table = tables[i]
-                    candidates = hudongbaike_candidate_json[i]
-
-                    EDG_master = EntityDisambiguationGraph(kb_name, i, table, candidates, hudongbaike_graph_path, hudongbaike_infobox_property, hudongbaike_abstracts, hudongbaike_disambiguation_output_path)
-
-                    time1 = time.time()
-
-                    EDG_master.build_entity_disambiguation_graph()
-                    EDG_master.compute_el_impact_factors()
-                    EDG_master.iterative_probability_propagation()
-                    EDG_master.rank_candidates()
-                    EDG_master.pick_entity()
-                    EDG_master.save_entity_disambiguation_graph()
-                    EDG_master.draw_entity_disambiguation_graph()
-
-                    time2 = time.time()
-                    print 'Consumed Time: ' + str(time2 - time1) + ' s'
-                    print
-
-            finally:
-                if hudongbaike_candidate_file:
-                    hudongbaike_candidate_file.close()
-
-                if hudongbaike_infobox_property:
-                    hudongbaike_infobox_property.close()
-
-                if hudongbaike_abstracts:
-                    hudongbaike_abstracts.close()
+                # if baidubaike_abstracts:
+                #     baidubaike_abstracts.close()
 
 
-        # zhwiki
-        if self.kb_name == "zhwiki":
-            try:
-                kb_name = self.kb_name
-                tables = self.tables
-                zhwiki_graph_path = self.graph_path
-                zhwiki_disambiguation_output_path = self.disambiguation_output_path
-                zhwiki_candidate_file = open(self.candidate_path, 'r')
-                zhwiki_candidate = zhwiki_candidate_file.read()
-                zhwiki_candidate_json = json.loads(zhwiki_candidate, encoding='utf8')    # kb_candidate[nTable][nRow][nCol] = dict{'mention': m, 'candidates': []}
-                zhwiki_infobox_property = open(self.infobox_property_path, 'r')
-                zhwiki_abstracts = open(self.abstracts_path, 'r')
-
-                # i: 第i张表格，从0开始
-                for i in range(self.table_quantity):
-                    table = tables[i]
-                    candidates = zhwiki_candidate_json[i]
-
-                    EDG_master = EntityDisambiguationGraph(kb_name, i, table, candidates, zhwiki_graph_path, zhwiki_infobox_property, zhwiki_abstracts, zhwiki_disambiguation_output_path)
-
-                    time1 = time.time()
-
-                    EDG_master.build_entity_disambiguation_graph()
-                    EDG_master.compute_el_impact_factors()
-                    EDG_master.iterative_probability_propagation()
-                    EDG_master.rank_candidates()
-                    EDG_master.pick_entity()
-                    EDG_master.save_entity_disambiguation_graph()
-                    EDG_master.draw_entity_disambiguation_graph()
-
-                    time2 = time.time()
-                    print 'Consumed Time: ' + str(time2 - time1) + ' s'
-                    print
-
-            finally:
-                if zhwiki_candidate_file:
-                    zhwiki_candidate_file.close()
-
-                if zhwiki_infobox_property:
-                    zhwiki_infobox_property.close()
-
-                if zhwiki_abstracts:
-                    zhwiki_abstracts.close()
 
 

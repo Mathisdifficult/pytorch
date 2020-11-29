@@ -21,11 +21,11 @@ def preprocess():
     kb_labels_path = '/Users/ylz/Downloads/zhishime_json/baidubaike/home/wl/zhishime2/baidubaike/3.0_baidubaike_labels_zh.json'
     entity_url_output_path = '/Users/ylz/ylz/jist2016-link/data/entity/baidubaike_entity_url.txt'
     kb_infobox_properties_path = '/Users/ylz/Downloads/zhishime_json/baidubaike/home 2/wl/zhishime2/baidubaike/3.0_baidubaike_infobox_properties_zh.json'
-    infobox_properties_output_path = '/Users/ylz/ylz/jist2016-link/data/baidubaike_infobox_properties.txt'
+    infobox_properties_output_path = '/Users/ylz/ylz/jist2016-link/data/property/baidubaike_infobox_properties.txt'
     kb_abstracts_path = '/Users/ylz/Downloads/zhishime_json/baidubaike/home 3/wl/zhishime2/baidubaike/3.0_baidubaike_abstracts_zh.json'
-    abstracts_output_path = '/Users/ylz/ylz/jist2016-link/data/abstract/baidubaike_abstracts.txt'
-    synonym_path = '../../../data/synonym/baidubaike_entities_syn.txt'
-    entity_synonym_output_path = '../../../data/entity/baidubaike_entity_synonym.txt'
+    abstracts_output_path = '../../data/abstract/baidubaike_abstracts.txt'
+    synonym_path = '../../data/synonym/baidubaike_entities_syn.txt'
+    entity_synonym_output_path = '../../data/entity/baidubaike_entity_synonym.txt'
 
     extracter_baidubaike = Preprocess(kb_name, kb_labels_path, entity_url_output_path, kb_infobox_properties_path, infobox_properties_output_path, kb_abstracts_path, abstracts_output_path, synonym_path, entity_synonym_output_path)
 
@@ -34,11 +34,11 @@ def preprocess():
     # print 'Done!'
     #
     # print 'Extracting infobox properties from ' + kb_name + ' infobox properties......',
-    # extracter_baidubaike.extract_infobox_properties()
+    extracter_baidubaike.extract_infobox_properties()
     # print 'Done!'
     #
     # print 'Extracting abstracts from ' + kb_name + ' abstracts......',
-    extracter_baidubaike.extract_abstracts()
+    # extracter_baidubaike.extract_abstracts()
     # print 'Done!'
     #
     # print 'Conbining entities and synonyms of ' + kb_name + '......',
@@ -109,26 +109,26 @@ def preprocess():
 def candidate_generation():
     # baidubaike
     table_name = 'table'
-    table_path = '../../../data/table/table.xls'
+    table_path = '../../data/table/table.xls'
     kb_name = 'baidubaike'
-    entity_path = '../../../data/entity/baidubaike_entity_synonym.txt'
-    candidate_path = '../../../data/candidate/baidubaike_candidate_entities.txt'
+    entity_path = '../../data/entity/baidubaike_entity_syn_out_temp.txt'
+    candidate_path = '../../data/candidate/baidubaike_candidate_entities.txt'
 
     baidubaike_candidate_generater = Candidate(table_name, table_path, kb_name, entity_path, candidate_path)
 
     # print 'Generating candidate entities for mentions based on ' + kb_name + '......',
-    # baidubaike_candidate_generater.generate_candidate()
+    baidubaike_candidate_generater.generate_candidate()
     # print 'Done!'
 
 
     # hudongbaike
-    table_name = 'table'
-    table_path = '../../../data/table/table.xls'
-    kb_name = 'hudongbaike'
-    entity_path = '../../../data/entity/hudongbaike_entity_synonym.txt'
-    candidate_path = '../../../data/candidate/hudongbaike_candidate_entities.txt'
+    # table_name = 'table'
+    # table_path = '../../../data/table/table.xls'
+    # kb_name = 'hudongbaike'
+    # entity_path = '../../../data/entity/hudongbaike_entity_synonym.txt'
+    # candidate_path = '../../../data/candidate/hudongbaike_candidate_entities.txt'
 
-    hudongbaike_candidate_generater = Candidate(table_name, table_path, kb_name, entity_path, candidate_path)
+    # hudongbaike_candidate_generater = Candidate(table_name, table_path, kb_name, entity_path, candidate_path)
 
     # print 'Generating candidate entities for mentions based on ' + kb_name + '......',
     # hudongbaike_candidate_generater.generate_candidate()
@@ -136,13 +136,13 @@ def candidate_generation():
 
 
     # zhwiki
-    table_name = 'table'
-    table_path = '../../../data/table/table.xls'
-    kb_name = 'zhwiki'
-    entity_path = '../../../data/entity/zhwiki_entity_synonym.txt'
-    candidate_path = '../../../data/candidate/zhwiki_candidate_entities.txt'
+    # table_name = 'table'
+    # table_path = '../../../data/table/table.xls'
+    # kb_name = 'zhwiki'
+    # entity_path = '../../../data/entity/zhwiki_entity_synonym.txt'
+    # candidate_path = '../../../data/candidate/zhwiki_candidate_entities.txt'
 
-    zhwiki_candidate_generater = Candidate(table_name, table_path, kb_name, entity_path, candidate_path)
+    # zhwiki_candidate_generater = Candidate(table_name, table_path, kb_name, entity_path, candidate_path)
 
     # print 'Generating candidate entities for mentions based on ' + kb_name + '......',
     # zhwiki_candidate_generater.generate_candidate()
@@ -153,14 +153,14 @@ def candidate_generation():
 def entity_disambiguation():
     # baidubaike
     table_name = 'table'
-    table_path = '../../../data/table/table.xls'
+    table_path = '../../data/table/table.xls'
     kb_name = 'baidubaike'
     candidate_name = 'baidubaike_candidate_entities'
-    candidate_path = '../../../data/candidate/baidubaike_candidate_entities.txt'
-    graph_path = '../../../data/disambiguation/baidubaike/graph/'
-    disambiguation_output_path = '../../../data/disambiguation/baidubaike/result/'
-    infobox_property_path = '../../../data/property/baidubaike_infobox_properties.txt'
-    abstracts_path = '../../../data/abstract/baidubaike_abstracts.txt'
+    candidate_path = '../../data/candidate/baidubaike_candidate_entities.txt'
+    graph_path = '../../data/disambiguation/baidubaike/graph/'
+    disambiguation_output_path = '../../data/disambiguation/baidubaike/result/'
+    infobox_property_path = '../../data/property/baidubaike_infobox_properties.txt'
+    abstracts_path = '../../data/abstract/baidubaike_abstracts.txt'
 
     baidubaike_judger = Disambiguation(table_name, table_path, kb_name, candidate_name, candidate_path, graph_path, disambiguation_output_path, infobox_property_path, abstracts_path)
 
@@ -168,38 +168,6 @@ def entity_disambiguation():
     baidubaike_judger.disambiguation()
 
 
-    # hudongbaike
-    table_name = 'table'
-    table_path = '../../../data/table/table.xls'
-    kb_name = 'hudongbaike'
-    candidate_name = 'hudongbaike_candidate_entities'
-    candidate_path = '../../../data/candidate/hudongbaike_candidate_entities.txt'
-    graph_path = '../../../data/disambiguation/hudongbaike/graph/'
-    disambiguation_output_path = '../../../data/disambiguation/hudongbaike/result/'
-    infobox_property_path = '../../../data/property/hudongbaike_infobox_properties.txt'
-    abstracts_path = '../../../data/abstract/hudongbaike_abstracts.txt'
-
-    hudongbaike_judger = Disambiguation(table_name, table_path, kb_name, candidate_name, candidate_path, graph_path, disambiguation_output_path, infobox_property_path, abstracts_path)
-
-    # print 'Disambiguating candidate entities based on ' + kb_name + ':'
-    hudongbaike_judger.disambiguation()
-
-
-    # zhwiki
-    table_name = 'table'
-    table_path = '../../../data/table/table.xls'
-    kb_name = 'zhwiki'
-    candidate_name = 'zhwiki_candidate_entities'
-    candidate_path = '../../../data/candidate/zhwiki_candidate_entities.txt'
-    graph_path = '../../../data/disambiguation/zhwiki/graph/'
-    disambiguation_output_path = '../../../data/disambiguation/zhwiki/result/'
-    infobox_property_path = '../../../data/property/zhwiki_infobox_properties.txt'
-    abstracts_path = '../../../data/abstract/zhwiki_abstracts.txt'
-
-    zhwiki_judger = Disambiguation(table_name, table_path, kb_name, candidate_name, candidate_path, graph_path, disambiguation_output_path, infobox_property_path, abstracts_path)
-
-    # print 'Disambiguating candidate entities based on ' + kb_name + ':'
-    zhwiki_judger.disambiguation()
 
 
 # Step 4: 利用多知识库间sameAs关系提升链接质量
@@ -255,12 +223,14 @@ def mark():
 
 # 比较人工标注结果与系统标注结果
 def result():
-    table_path = '../../../data/table/table.xls'
-    single_kb_el_result_path = '../../../data/final/jist2016/single_kb_el_result.txt'
-    multiple_kb_el_result_path = '../../../data/final/jist2016/multiple_kb_el_result.txt'
-    baidubaike_human_mark_entity_path = '../../../data/mark/baidubaike/baidubaike_human_mark.txt'
-    hudongbaike_human_mark_entity_path = '../../../data/mark/hudongbaike/hudongbaike_human_mark.txt'
-    zhwiki_human_mark_entity_path = '../../../data/mark/zhwiki/zhwiki_human_mark.txt'
+    table_path = '../../data/table/table.xls'
+    single_kb_el_result_path = '../../data/disambiguation/baidubaike/result/single_kb_el_result.txt'
+    baidubaike_human_mark_entity_path = '../../data/mark/baidubaike/baidubaike_human_mark.txt'
+
+
+    multiple_kb_el_result_path = '../../data/final/jist2016/multiple_kb_el_result.txt'    
+    hudongbaike_human_mark_entity_path = '../../data/mark/hudongbaike/hudongbaike_human_mark.txt'
+    zhwiki_human_mark_entity_path = '../../data/mark/zhwiki/zhwiki_human_mark.txt'
 
     comparer = Result(table_path, single_kb_el_result_path, multiple_kb_el_result_path, baidubaike_human_mark_entity_path, hudongbaike_human_mark_entity_path, zhwiki_human_mark_entity_path)
 
@@ -271,11 +241,11 @@ def result():
 def main():
 
 
-    preprocess()
+    # preprocess()
     # candidate_generation()
     # entity_disambiguation()
     # sameas()
-    # result()
+    result()
 
 if __name__ == "__main__":
     main()
