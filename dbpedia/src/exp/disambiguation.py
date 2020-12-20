@@ -654,6 +654,7 @@ class EntityDisambiguationGraph(object):
                         eNode_index = EDG.node[i]['ranking'][0][0]
                         entity = EDG.node[eNode_index]['candidate']
 
+
                     dict['mention'] = mention
                     dict['entity'] = entity
                     i += 1
